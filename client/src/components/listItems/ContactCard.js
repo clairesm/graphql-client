@@ -18,8 +18,6 @@ const ContactCard = (props) => {
     setEditMode(!editMode);
   };
 
-  console.log('props', props);
-
   return (
     <div>
       {editMode ? (
@@ -32,7 +30,7 @@ const ContactCard = (props) => {
               key='edit'
               onClick={handleButtonClick}
             />,
-            <RemoveContact />,
+            <RemoveContact id={id} />,
           ]}
         >
           {firstName} {lastName}

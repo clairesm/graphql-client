@@ -27,6 +27,7 @@ const Contacts = () => {
         <List.Item key={id}>
           <ContactCard
             key={id}
+            id={id}
             firstName={firstName}
             lastName={lastName}
           />
