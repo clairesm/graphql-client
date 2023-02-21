@@ -1,31 +1,69 @@
-import React from "react";
-import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { Form, Input } from "antd";
+import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { Button, Form, Input } from 'antd';
 
 const AddContact = () => {
   const [id] = useState(uuidv4());
 
+  const [form] = Form.useForm();
+  const [, forceUpdate] = useState();
+
+  useEffect(() => {
+    forceUpdate([]);
+  }, []);
+
+  const onFinish = (values) => {
+    console.log('values', values);
+  };
+
   return (
     <Form
-      name="add-contact-form"
-      layout="inline"
-      size="large"
-      style={{ marginBottom: "40px" }}
+      name='add-contact-form'
+      form={form}
+      layout='inline'
+      onFinish={onFinish}
+      size='large'
+      style={{ marginBottom: '40px' }}
     >
       <Form.Item
-        name="firstName "
-        rules={[{ required: true, message: "Please enter your first name!" }]}
+        name='firstName'
+        rules={[
+          {
+            required: true,
+            message: 'Please enter your first name!',
+          },
+        ]}
       >
-        <Input placeholder="i.e. John"></Input>
+        <Input placeholder='i.e. John'></Input>
       </Form.Item>
       <Form.Item
-        name="lastName "
-        rules={[{ required: true, message: "Please enter your last name!" }]}
+        name='lastName'
+        rules={[
+          {
+            required: true,
+            message: 'Please enter your last name!',
+          },
+        ]}
       >
-        <Input placeholder="i.e. Smith"></Input>
+        <Input placeholder='i.e. Smith'></Input>
       </Form.Item>
-      <Form.Item shouldUpdate={true}></Form.Item>
+      <Form.Item shouldUpdate={true}>
+        {() => (
+          <Button
+            type='primary'
+            htmlType='submit'
+            disabled={
+              !form.isFieldsTouched(true) ||
+              form
+                .getFieldsError()
+                .filter(({ errors }) => errors.length)
+                .length
+            }
+          >
+            Add Contact
+          </Button>
+        )}
+      </Form.Item>
     </Form>
   );
 };
