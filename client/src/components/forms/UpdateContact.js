@@ -1,20 +1,60 @@
 import { Button, Input, Form } from 'antd';
 import { useState, useEffect } from 'react';
+import { UPDATE_CONTACT } from '../../queries';
+import { useMutation } from '@apollo/client';
 
 const UpdateContact = (props) => {
   const [form] = Form.useForm();
   const [, forceUpdate] = useState();
+  const [id] = useState(props.id);
+  const [firstName, setFirstName] = useState(
+    props.firstName
+  );
+  const [lastName, setLastName] = useState(props.lastName);
+
+  const [updateContact] = useMutation(UPDATE_CONTACT);
 
   useEffect(() => {
     forceUpdate();
   }, []);
+
+  const onFinish = (values) => {
+    const { firstName, lastName } = values;
+    updateContact({
+      variables: {
+        id,
+        firstName,
+        lastName,
+      },
+    });
+    props.onButtonClick();
+  };
+
+  const updateStateVariable = (variable, value) => {
+    props.updateStateVariable(variable, value);
+    switch (variable) {
+      case 'firstName':
+        setFirstName(value);
+        break;
+      case 'lastName':
+        setLastName(value);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <Form
       form={form}
       name='update-contact-form'
       layout='inline'
+      onFinish={onFinish}
       size='large'
+      initialValues={{
+        firstName: firstName,
+        lastName: lastName,
+      }}
     >
       <Form.Item
         name='firstName'
@@ -25,7 +65,12 @@ const UpdateContact = (props) => {
           },
         ]}
       >
-        <Input placeholder='i.e. John' />
+        <Input
+          placeholder='i.e. John'
+          onChange={(e) =>
+            updateStateVariable('firstName', e.target.value)
+          }
+        />
       </Form.Item>
       <Form.Item
         name='lastName'
@@ -36,7 +81,12 @@ const UpdateContact = (props) => {
           },
         ]}
       >
-        <Input placeholder='i.e. Smith' />
+        <Input
+          placeholder='i.e. Smith'
+          onChange={(e) =>
+            updateStateVariable('lastName', e.target.value)
+          }
+        />
       </Form.Item>
       <Form.Item shouldUpdate={true}>
         {() => (
